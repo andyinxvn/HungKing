@@ -3,6 +3,7 @@ import { AudioMgr } from './core/AudioMgr';
 import GameMgr from './core/GameMgr';
 import { card } from './components/card';
 import { GameEvent } from './core/GameEvent';
+import { result } from './result';
 const { ccclass, property } = _decorator;
 
 @ccclass('gameplay')
@@ -28,6 +29,11 @@ export class gameplay extends Component {
     sfCards: SpriteFrame[] = []
     previousCard = -1 //previous cardid
     previousPos = -1;
+    clearCards = 0;
+
+    //--result
+    @property({type:Node})
+    popupResult:Node | null = null;
     start() {
         //sound
         AudioMgr.inst.playBgm();
@@ -36,6 +42,18 @@ export class gameplay extends Component {
         //add listener
         this.btnHome.on(Button.EventType.CLICK, this.onClick, this);
         this.btnSound.on(Button.EventType.CLICK, this.onClick, this);
+        this.popupResult.getComponent(result).init((iCommand:number)=>{
+            if(iCommand===1) {
+                //restart
+                this.loadGameLevel();
+            } else {
+                GameMgr.inst.gameData.level ++;
+                GameMgr.inst.saveData();
+                this.prepareGameLevel();
+                this.loadGameLevel();
+            }
+        });
+        this.popupResult.active = false;
         this.initCardEvent();
         //--
         this.prepareGameLevel();//prepare data before load
@@ -64,7 +82,6 @@ export class gameplay extends Component {
             this.btnSound.children[1].active = true;
         }
     }
-
     prepareGameLevel() {
         let level = GameMgr.inst.gameData.level;
         let row = GameMgr.inst.gameLevels[level - 1].row;
@@ -100,6 +117,7 @@ export class gameplay extends Component {
         //--info
         this.lbTurns.string = `${GameMgr.inst.gameData.turn}`;
         this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
+        this.clearCards = 0;
 
         //set size of board
         let level = GameMgr.inst.gameData.level;
@@ -154,6 +172,23 @@ export class gameplay extends Component {
                         // this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
                         GameMgr.inst.numberTo(this.lbMatches,0,GameMgr.inst.gameData.match,0.2);
                         AudioMgr.inst.playSound("matching");
+                        this.clearCards+=2;
+                        let remainCard = this.board.children.length - this.clearCards;
+                        if(remainCard<=1){//level done
+                            this.board.children.forEach(element => {
+                                if(!element.getComponent(card).isClear){
+                                    element.getComponent(card).hideCard();
+                                }
+                            });
+                            //--show game result
+                            this.popupResult.getComponent(result).show();
+                            let timeout = setTimeout(()=>{
+                                clearTimeout(timeout);
+                                AudioMgr.inst.playSound('win');
+                            },200);
+                            GameMgr.inst.gameData.match = 0;
+                            GameMgr.inst.gameData.turn = 0;
+                        }
                     } else {//not match
                         this.board.children[this.previousPos].getComponent(card).closeCard();
                         this.board.children[data.posIdx].getComponent(card).closeCard();

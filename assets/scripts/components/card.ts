@@ -13,6 +13,7 @@ export class card extends Component {
     posIdx = 0 ;//position of card on board
     isFlipping = false;
     readonly animationTime = 0.3;
+    isClear = false;
     init(spBack:SpriteFrame, spIcon:SpriteFrame,cardIdx:number,posIdx:number){
         this.back.getComponent(Sprite).spriteFrame = spBack;
         this.icon.getComponent(Sprite).spriteFrame = spIcon;
@@ -55,6 +56,7 @@ export class card extends Component {
         this.icon.scale = new Vec3(1,1,1);
     }
     hideCard(){
+        this.isClear = true;
         tween(this.node.getComponent(UIOpacity)).to(this.animationTime,{opacity:1}).start();
     }
 }
