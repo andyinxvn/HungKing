@@ -41,11 +41,11 @@ export class AudioMgr {
         audioMgr.addChild(this.bgmNode);
 
         //--read save file
-        this.readData();
+        this.loadSaveData();
 
     }
 
-    readData() {
+    loadSaveData() {
         let val = sys.localStorage.getItem(this.SOUND_DATA);
         if (val != null) {
             this.iSoundOn = parseInt(val);

@@ -50,17 +50,21 @@ export class gameplay extends Component {
                 this.loadGameLevel();
             } else {
                 GameMgr.inst.gameData.level ++;
-                GameMgr.inst.saveData();
                 this.prepareGameLevel();
                 this.loadGameLevel();
             }
+            GameMgr.inst.saveData();
         });
         this.popupResult.active = false;
         this.initCardEvent();
         //--
-        this.prepareGameLevel();//prepare data before load
-        this.loadGameLevel();
-
+        if (GameMgr.inst.isResume) {
+            GameMgr.inst.isResume = false;
+            this.loadGameLevel();
+        } else {
+            this.prepareGameLevel();//prepare data before load
+            this.loadGameLevel();
+        }
     }
     onClick(button: Button) {
         AudioMgr.inst.playSound('click')
@@ -154,11 +158,16 @@ export class gameplay extends Component {
 
                 let sfBack = this.sfCardBacks[GameMgr.inst.gameData.back];
                 let cardIdx = table[i][j];
-                let sfCard = this.sfCards[cardIdx];
-                item.getComponent(card).init(sfBack, sfCard, cardIdx, this.board.children.length);
-                //--add click event
-                item.on(Button.EventType.CLICK, this.onCard, this);
-                this.board.addChild(item);
+                if (cardIdx === -1) {
+                    this.clearCards++;
+                    item.getComponent(card).hideCard();
+                } else {
+                    let sfCard = this.sfCards[cardIdx];
+                    item.getComponent(card).init(sfBack, sfCard, cardIdx, this.board.children.length,i,j);
+                    //--add click event
+                    item.on(Button.EventType.CLICK, this.onCard, this);
+                }
+		        this.board.addChild(item);
             }
         }
     }
@@ -179,6 +188,8 @@ export class gameplay extends Component {
                         this.clearCards+=2;
                         let remainCard = this.board.children.length - this.clearCards;
                         if(remainCard<=1){//level done
+                            GameMgr.inst.gameData.match = 0;
+                            GameMgr.inst.gameData.turn = 0;
                             this.board.children.forEach(element => {
                                 if(!element.getComponent(card).isClear){
                                     element.getComponent(card).hideCard();
@@ -189,9 +200,7 @@ export class gameplay extends Component {
                             let timeout = setTimeout(()=>{
                                 clearTimeout(timeout);
                                 AudioMgr.inst.playSound('win');
-                            },200);
-                            GameMgr.inst.gameData.match = 0;
-                            GameMgr.inst.gameData.turn = 0;
+                            }, 200);
                         }
                         this.previousCard = -1;
                         this.previousPos = -1;

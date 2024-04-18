@@ -14,6 +14,7 @@ export class home extends Component {
     @property([AudioClip])
     audioClips: AudioClip[] = [];
     start() {
+        GameMgr.inst.loadSaveData();
         //init sounds
         if (AudioMgr.inst.audioClips.length < 1) {
             AudioMgr.inst.init(this.audioClips);
@@ -39,9 +40,11 @@ export class home extends Component {
         AudioMgr.inst.playSound('click')
         switch (button.node.name) {
             case 'btnPlay':
+                GameMgr.inst.isResume = false;
                 director.loadScene('gameplay');
                 break;
             case 'btnResume':
+                GameMgr.inst.isResume = true;
                 director.loadScene('gameplay');
                 break;
         }

@@ -11,16 +11,20 @@ export class card extends Component {
     icon:Node | null = null;
     cardIdx = 0;
     posIdx = 0 ;//position of card on board
+    row = 0;
+    col = 0;
     isFlipping = false;
     readonly animationTime = 0.3;
     isClear = false;
-    init(spBack:SpriteFrame, spIcon:SpriteFrame,cardIdx:number,posIdx:number){
+    init(spBack:SpriteFrame, spIcon:SpriteFrame,cardIdx:number,posIdx:number,row:number, col:number){
         this.back.getComponent(Sprite).spriteFrame = spBack;
         this.icon.getComponent(Sprite).spriteFrame = spIcon;
         this.icon.active = false;
         this.back.active = true;
         this.cardIdx = cardIdx;
         this.posIdx = posIdx;
+        this.row = row;
+        this.col = col;
     }
     cardClick(){
         if(this.isFlipping) return;
@@ -58,6 +62,8 @@ export class card extends Component {
     hideCard(){
         this.isClear = true;
         tween(this.node.getComponent(UIOpacity)).to(this.animationTime,{opacity:1}).start();
+        GameMgr.inst.gameData.table[this.row][this.col]=-1;
+        GameMgr.inst.saveData();
     }
 }
 
