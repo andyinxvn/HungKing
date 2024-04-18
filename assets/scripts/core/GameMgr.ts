@@ -9,6 +9,7 @@ class GameMgr {
         return this._inst;
     }
     //--game data
+    readonly OPEN_CARD_DONE = "OPEN_CARD_DONE";
     private readonly GAME_DATA = "GAME_DATA";
     isResume = false;
     gameData = {
