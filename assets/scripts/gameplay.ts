@@ -16,6 +16,8 @@ export class gameplay extends Component {
     lbMatches: Label | null = null;
     @property({ type: Label })
     lbTurns: Label | null = null;
+    @property({ type: Label })
+    lbLevel: Label | null = null;
 
     //--gameplay
     @property({ type: Node })
@@ -117,6 +119,8 @@ export class gameplay extends Component {
         //--info
         this.lbTurns.string = `${GameMgr.inst.gameData.turn}`;
         this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
+        this.lbLevel.string = `LV: ${GameMgr.inst.gameData.level}`;
+        
         this.clearCards = 0;
 
         //set size of board
@@ -189,6 +193,8 @@ export class gameplay extends Component {
                             GameMgr.inst.gameData.match = 0;
                             GameMgr.inst.gameData.turn = 0;
                         }
+                        this.previousCard = -1;
+                        this.previousPos = -1;
                     } else {//not match
                         this.board.children[this.previousPos].getComponent(card).closeCard();
                         this.board.children[data.posIdx].getComponent(card).closeCard();
