@@ -15,6 +15,7 @@ class GameMgr {
         level:1,
         turn:1,
         match:0,
+        back:0,//card back
         table:[
             [0,0,0],
             [0,0,0],
@@ -22,12 +23,12 @@ class GameMgr {
         ]
     }
     gameLevels = [
-        [
-            [1,1,1,1],
-            [1,1,1,1],
-            [1,1,1,0],
-            [1,1,1,1]
-        ]
+        {row:3,col:3},
+        {row:4,col:4},
+        {row:5,col:5},
+        {row:6,col:6},
+        {row:7,col:7},
+        {row:8,col:8},
     ];
     saveData(){
         sys.localStorage.setItem(this.GAME_DATA,JSON.stringify(this.gameData));
