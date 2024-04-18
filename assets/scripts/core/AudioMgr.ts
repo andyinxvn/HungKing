@@ -38,6 +38,7 @@ export class AudioMgr {
         //add bg music
         this.bgmNode = new Node();
         this.bgm = this.bgmNode.addComponent(AudioSource);
+        this.bgm.loop = true;
         audioMgr.addChild(this.bgmNode);
 
         //--read save file

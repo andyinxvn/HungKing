@@ -15,6 +15,8 @@ class GameMgr {
     gameData = {
         level:1,
         turn:0,
+        score:0,
+        bestScore:0,
         match:0,
         back:0,//card back
         table:[
@@ -35,13 +37,13 @@ class GameMgr {
         sys.localStorage.setItem(this.GAME_DATA,JSON.stringify(this.gameData));
     }
     loadSaveData(){
-        let val = sys.localStorage.getItem(this.GAME_DATA);
-        if(val!=null){
-            this.gameData = JSON.parse(val);
-        }
-        else {
+        // let val = sys.localStorage.getItem(this.GAME_DATA);
+        // if(val!=null){
+        //     this.gameData = JSON.parse(val);
+        // }
+        // else {
             this.saveData();
-        }
+        // }
     }
 
     //--number anims

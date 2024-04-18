@@ -18,6 +18,8 @@ export class gameplay extends Component {
     lbTurns: Label | null = null;
     @property({ type: Label })
     lbLevel: Label | null = null;
+    @property({ type: Label })
+    lbScore: Label | null = null;
 
     //--gameplay
     @property({ type: Node })
@@ -47,6 +49,7 @@ export class gameplay extends Component {
         this.popupResult.getComponent(result).init((iCommand:number)=>{
             if(iCommand===1) {
                 //restart
+                this.prepareGameLevel();
                 this.loadGameLevel();
             } else {
                 GameMgr.inst.gameData.level ++;
@@ -124,6 +127,7 @@ export class gameplay extends Component {
         this.lbTurns.string = `${GameMgr.inst.gameData.turn}`;
         this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
         this.lbLevel.string = `LV: ${GameMgr.inst.gameData.level}`;
+        this.lbScore.string = `${GameMgr.inst.gameData.score}`;
         
         this.clearCards = 0;
 
@@ -182,14 +186,19 @@ export class gameplay extends Component {
                         this.board.children[this.previousPos].getComponent(card).hideCard();
                         this.board.children[data.posIdx].getComponent(card).hideCard();
                         GameMgr.inst.gameData.match++;
-                        // this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
-                        GameMgr.inst.numberTo(this.lbMatches,0,GameMgr.inst.gameData.match,0.2);
+                        this.lbMatches.string = `${GameMgr.inst.gameData.match}`;
+                        GameMgr.inst.numberTo(this.lbScore, GameMgr.inst.gameData.score, GameMgr.inst.gameData.score+100,500);
+                        GameMgr.inst.gameData.score+=100;
+                        if(GameMgr.inst.gameData.bestScore<GameMgr.inst.gameData.score){
+                            GameMgr.inst.gameData.bestScore = GameMgr.inst.gameData.score;
+                        }
                         AudioMgr.inst.playSound("matching");
                         this.clearCards+=2;
                         let remainCard = this.board.children.length - this.clearCards;
                         if(remainCard<=1){//level done
                             GameMgr.inst.gameData.match = 0;
                             GameMgr.inst.gameData.turn = 0;
+                            GameMgr.inst.gameData.score = 0;
                             this.board.children.forEach(element => {
                                 if(!element.getComponent(card).isClear){
                                     element.getComponent(card).hideCard();
@@ -207,6 +216,8 @@ export class gameplay extends Component {
                     } else {//not match
                         this.board.children[this.previousPos].getComponent(card).closeCard();
                         this.board.children[data.posIdx].getComponent(card).closeCard();
+                        GameMgr.inst.gameData.turn++;
+                        this.lbTurns.string = `${GameMgr.inst.gameData.turn}`;
                         this.previousCard = -1;
                         this.previousPos = -1;
                         AudioMgr.inst.playSound("wrong");
@@ -218,8 +229,6 @@ export class gameplay extends Component {
     onCard(button: Button) {
         AudioMgr.inst.playSound('click')
         button.node.getComponent(card).cardClick();
-        GameMgr.inst.gameData.turn++;
-        this.lbTurns.string = `${GameMgr.inst.gameData.turn}`;
     }
     // update(deltaTime: number) {
 

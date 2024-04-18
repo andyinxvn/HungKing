@@ -9,6 +9,8 @@ export class home extends Component {
     btnPlay: Node | null = null
     @property({ type: Label })
     lbBestScore: Label | null = null;
+    @property({ type: Label })
+    lbLevel: Label | null = null;
     @property({type:Node})
     btnResume:Node | null = null;
     @property([AudioClip])
@@ -26,7 +28,9 @@ export class home extends Component {
         this.btnResume.on(Button.EventType.CLICK, this.onClick, this);
 
         //load level
-        this.lbBestScore.string = `LEVEL: ${GameMgr.inst.gameData.level}`;
+        this.lbLevel.string = `LEVEL: ${GameMgr.inst.gameData.level}`;
+
+        this.lbBestScore.string = `${GameMgr.inst.gameData.bestScore}`
 
         //--resume game
         if (GameMgr.inst.gameData.turn > 0) {
