@@ -10,9 +10,11 @@ class GameMgr {
     }
     //--game data
     private readonly GAME_DATA = "GAME_DATA";
+    isResume = false;
     gameData = {
-        score:0,
-        bestScore:0,
+        level:1,
+        turn:1,
+        match:0,
         table:[
             [0,0,0],
             [0,0,0],
