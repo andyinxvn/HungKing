@@ -21,6 +21,14 @@ class GameMgr {
             [0,0,0]
         ]
     }
+    gameLevels = [
+        [
+            [1,1,1,1],
+            [1,1,1,1],
+            [1,1,1,0],
+            [1,1,1,1]
+        ]
+    ];
     saveData(){
         sys.localStorage.setItem(this.GAME_DATA,JSON.stringify(this.gameData));
     }
