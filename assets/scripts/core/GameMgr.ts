@@ -32,20 +32,28 @@ class GameMgr {
         {row:6,col:6},
         {row:7,col:7},
         {row:8,col:8},
+        {row:9,col:9},
+        {row:10,col:10}
     ];
     saveData(){
         sys.localStorage.setItem(this.GAME_DATA,JSON.stringify(this.gameData));
     }
     loadSaveData(){
-        // let val = sys.localStorage.getItem(this.GAME_DATA);
-        // if(val!=null){
-        //     this.gameData = JSON.parse(val);
-        // }
-        // else {
+        let val = sys.localStorage.getItem(this.GAME_DATA);
+        if(val!=null){
+            this.gameData = JSON.parse(val);
+        }
+        else {
             this.saveData();
-        // }
+        }
     }
-
+    resetLevel(){
+        this.gameData.score = 0;
+        this.gameData.turn =0;
+        this.gameData.match = 0;
+        this.gameData.table = [];
+        this.saveData();
+    }
     //--number anims
     public numberWithCommas(n:number) {
         if (n) {
