@@ -40,20 +40,23 @@ export class card extends Component {
     closeCard(){
         this.isFlipping = true;
         tween(this.icon).to(this.animationTime,{scale:new Vec3(-1,1,1)})
+        .delay(this.animationTime)
         .call(()=>{
             this.isFlipping = false;
             this.back.active = true;
             this.icon.active = false;
             this.icon.scale = new Vec3(1,1,1);
-            GameEvent.DispatchEvent(GameMgr.inst.OPEN_CARD_DONE,{cardIdx:-1,posIdx:-1});
         }).start()
+    }
+    closeCardNoAnim(){
+        this.isFlipping = false;
+        this.back.active = true;
+        this.icon.active = false;
+        this.icon.scale = new Vec3(1,1,1);
     }
     hideCard(){
         tween(this.node.getComponent(UIOpacity)).to(this.animationTime,{opacity:1}).start();
     }
-    // update(deltaTime: number) {
-        
-    // }
 }
 
 

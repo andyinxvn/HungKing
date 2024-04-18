@@ -155,7 +155,6 @@ export class gameplay extends Component {
                         GameMgr.inst.numberTo(this.lbMatches,0,GameMgr.inst.gameData.match,0.2);
                         AudioMgr.inst.playSound("matching");
                     } else {//not match
-                        this.board.children[this.previousPos].getComponent(card).cardClick();
                         this.board.children[this.previousPos].getComponent(card).closeCard();
                         this.board.children[data.posIdx].getComponent(card).closeCard();
                         this.previousCard = -1;
